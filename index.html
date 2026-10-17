@@ -104,6 +104,32 @@ header{position:relative}
 @media(max-width:950px){.rank-top{position:static;transform:none;align-self:center;order:-1}.rank-top:hover{transform:translateY(-1px)}}
 html.mob .rank-top{position:absolute;transform:translate(-50%,-50%);order:0;padding:5px 10px;font-size:9px;letter-spacing:1px}
 html.mob .rank-top:hover{transform:translate(-50%,-50%)}
+
+.lb-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,14,.78);backdrop-filter:blur(4px)}
+.lb-overlay.open{display:flex}
+.lb-modal{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#121c2a,#0a111b);border:1px solid #6fb0d6;box-shadow:0 24px 80px #000b;animation:rise .35s cubic-bezier(.2,.8,.2,1) both}
+.lb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #36597a}
+.lb-head h2{margin:0;font:600 18px Cinzel,serif;color:#d6efff}
+.lb-head small{display:block;margin-top:4px;font:10px Inter,sans-serif;letter-spacing:1px;color:#8fa9bd;text-transform:uppercase}
+.lb-x{flex:0 0 34px;width:34px;height:34px;border:1px solid #5d8fb0;background:#131d2a;color:#cfeaff;font-size:20px;line-height:1;display:grid;place-items:center}
+.lb-x:hover{background:#1c2a3b;border-color:#8fd0f5}
+.lb-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px 10px}
+.lb-tab{padding:11px 8px;border:1px solid #3a4e63;background:#131d2a;color:#b5c7d6;font:600 12px Cinzel,serif;letter-spacing:1px}
+.lb-tab:hover{border-color:#8fd0f5}
+.lb-tab[aria-selected="true"]{background:linear-gradient(#2f6f9a,#1d4566);border-color:#7fc0e6;color:#eaf7ff}
+.lb-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 16px 10px;max-height:60vh}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{position:sticky;top:0;padding:11px 10px;background:#0b121b;border-bottom:1px solid #5a8fb5;color:#bfe6fa;font-size:10px;text-transform:uppercase;letter-spacing:1.4px;text-align:left}
+.lb-table td{padding:12px 10px;border-bottom:1px solid #ffffff10;font-size:13px;color:#e3eef8}
+.lb-table tr:nth-child(even) td{background:#ffffff04}
+.lb-table th:last-child,.lb-table td:last-child{text-align:center}
+.lb-rank{font:700 14px Cinzel,serif;color:#d6efff;white-space:nowrap}
+.lb-score{font-weight:700;color:#9fe0ff;font-variant-numeric:tabular-nums}
+.lb-empty{text-align:center;color:#8fa3b5;padding:24px 8px}
+.lb-foot{padding:12px 16px;border-top:1px solid #36597a;display:flex;gap:8px;align-items:center;justify-content:space-between}
+.lb-foot span{font-size:10px;letter-spacing:.8px;color:#8fa9bd;text-transform:uppercase}
+.lb-foot .btn{flex:0 0 auto;padding:10px 22px}
+html.mob .lb-scroll{max-height:none}html.mob .lb-overlay{padding:8px}html.mob .lb-tabs{padding:8px 16px 6px}html.mob .lb-table td{padding:8px 10px}
 </style>
 </head>
 <body>
@@ -111,14 +137,14 @@ html.mob .rank-top:hover{transform:translate(-50%,-50%)}
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 <div id="app">
-<header><div class="brand">THE THREE CROSSINGS<small>2D WINTER FANTASY · TACTICAL MATH RPG</small></div><a class="rank-top" href="ranking.html">&#127942; Leaderboard</a><div class="hud"><div>Adventurer<b id="hudName">Wanderer</b></div><div>Daily trial<b id="hudTurn">01 / 03</b></div><div>Spans joined<b id="hudBridges">00 / 03</b></div><div>Today<b id="hudDate">—</b></div></div></header>
+<header><div class="brand">THE THREE CROSSINGS<small>2D WINTER FANTASY · TACTICAL MATH RPG</small></div><a class="rank-top" href="ranking.html" data-leaderboard>&#127942; Leaderboard</a><div class="hud"><div>Adventurer<b id="hudName">Wanderer</b></div><div>Daily trial<b id="hudTurn">01 / 03</b></div><div>Spans joined<b id="hudBridges">00 / 03</b></div><div>Today<b id="hudDate">—</b></div></div></header>
 <main id="main">
 <section id="world">
 <canvas id="gameCanvas" aria-label="Side-view winter bridge adventure"></canvas>
 <div class="scene-label"><b>THE FROZEN ROAD</b><span>Act I · The Frostbitten Ford</span></div><div class="toast" id="toast">Bridge connected</div>
 <div class="world-bottom"><div class="portrait">✦</div><div class="party-label"><b id="partyName">THE WANDERERS</b><span>Solo adventurer</span></div></div>
 <div id="intro"><div class="intro-card"><div class="sig">A journey through the snow</div><h1>The Three<br>Crossings</h1><p>A snowbound road runs east, broken by three icy river channels. Each channel has a raised, hinged drawbridge. Solve a daily math trial to lower the next bridge, then cross it and move on to the following one, from left to right.</p><input id="nameInput" maxlength="100" placeholder="Student name"><input id="classInput" type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" autocomplete="off" placeholder="Class"><div class="phone-wrap" id="phoneWrap"><span class="pfx">+91</span><input id="phoneInput" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel-national" placeholder="Phone number"></div><button class="btn" id="startBtn">Begin expedition</button><div class="foot">3 DAILY TRIALS · 3 HINGED DRAWBRIDGES · ONE ADVENTURER</div></div></div>
-<div id="ending"><div class="end-card"><div class="sig">Expedition report</div><h2 id="endTitle">The Road Remembers</h2><p id="endText"></p><div id="review"></div><a id="leaderboardBtn" href="ranking.html">View Leaderboard</a></div></div>
+<div id="ending"><div class="end-card"><div class="sig">Expedition report</div><h2 id="endTitle">The Road Remembers</h2><p id="endText"></p><div id="review"></div><a id="leaderboardBtn" href="ranking.html" data-leaderboard>View Leaderboard</a></div></div>
 </section>
 <aside id="sidebar">
 <section class="section"><div class="eyebrow" id="turnLabel">Turn 01 · Span I</div><h2 id="questionTitle">A trial in the snow</h2><p id="question">Begin the expedition to receive today's first challenge.</p><div id="qDiagram"></div><div class="answers" id="answers"></div><div class="actions"><button class="btn" id="lockBtn" disabled>Lock answer</button><div id="confirmBox"><span class="confirm-q">Are you sure?</span><button class="btn" id="yesBtn">Yes</button><button class="btn secondary" id="noBtn">No</button></div></div><div class="feedback" id="feedback">One answer per turn. Correct answers lower the next drawbridge.</div></section>
@@ -130,6 +156,12 @@ html.mob .rank-top:hover{transform:translate(-50%,-50%)}
 <section class="section"><div class="eyebrow">Field notes</div><h2>Adventure log</h2><div class="log" id="log"><div>The adventurer waits at the edge of the broken road.</div></div></section>
 </aside>
 </main>
+<div class="lb-overlay" id="lbOverlay" role="dialog" aria-modal="true" aria-labelledby="lbTitle"><div class="lb-modal">
+<div class="lb-head"><div><h2 id="lbTitle">Adventurer Rankings</h2><small>Ordered by score · today’s entries update tomorrow</small></div><button class="lb-x" id="lbX" aria-label="Close leaderboard">&times;</button></div>
+<div class="lb-tabs" role="tablist"><button class="lb-tab" role="tab" data-class="7" aria-selected="true">CLASS 7</button><button class="lb-tab" role="tab" data-class="8" aria-selected="false">CLASS 8</button></div>
+<div class="lb-scroll"><table class="lb-table"><thead><tr><th scope="col">Rank</th><th scope="col">Student</th><th scope="col">Score</th></tr></thead><tbody id="lbBody"></tbody></table></div>
+<div class="lb-foot"><span>Rankings</span><button class="btn secondary" id="lbClose">Close</button></div>
+</div></div>
 </div>
 <script>
 (()=> {
@@ -520,5 +552,40 @@ buildTextures();applyMode();requestAnimationFrame(frame);
 })();
 
 (function(){const digits=(id,max)=>{const el=$(id);el.addEventListener('input',()=>{el.value=el.value.replace(/\D/g,'').slice(0,max);(id==='phoneInput'?$('phoneWrap'):el).classList.remove('invalid')})};digits('classInput',1);digits('phoneInput',10);$('nameInput').addEventListener('input',e=>e.target.classList.remove('invalid'))})();
+</script>
+<script>
+/* Leaderboard popup. Data is read live from ranking.html when it can be fetched (served over http);
+   otherwise the embedded copy below is used. Keep both in sync if you edit names. */
+(function(){
+ let data={
+  "7":[{name:"Orienta",bridges:3},{name:"Thulungsat",bridges:3},{name:"Alauddin",bridges:2},{name:"Bhoomi",bridges:2},{name:"Diya",bridges:2},{name:"Nerson ",bridges:2},{name:"Ritishma",bridges:2},{name:"Simrita",bridges:2},{name:"Suyash",bridges:2},{name:"Swrangsarth",bridges:2},{name:"Thangkiraj",bridges:2},{name:"Uraj",bridges:2}],
+  "8":[{name:"Birfung",bridges:3},{name:"Jonaid",bridges:3},{name:"Pranab",bridges:3},{name:"Sanfung islary",bridges:3},{name:"Shem",bridges:3},{name:"Abhishek sangma",bridges:1}]
+ };
+ const ov=document.getElementById('lbOverlay'),body=document.getElementById('lbBody'),tabs=[...ov.querySelectorAll('.lb-tab')],scroller=ov.querySelector('.lb-scroll');
+ let cls='7',lastFocus=null;
+ function render(){
+  tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.class===cls)));
+  body.innerHTML='';
+  const rows=[...(data[cls]||[])].sort((a,b)=>b.bridges-a.bridges);
+  if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=3;td.className='lb-empty';td.textContent='No rankings have been added for this class yet.';tr.appendChild(td);body.appendChild(tr);return}
+  let prev=null,rank=0;
+  rows.forEach(r=>{if(r.bridges!==prev)rank++;prev=r.bridges;
+   const tr=document.createElement('tr'),a=document.createElement('td'),b=document.createElement('td'),c=document.createElement('td');
+   a.className='lb-rank';a.textContent='RANK '+rank;b.textContent=r.name.trim();c.className='lb-score';c.textContent=r.bridges+'/3';
+   tr.append(a,b,c);body.appendChild(tr)});
+ }
+ function open(){lastFocus=document.activeElement;render();scroller.scrollTop=0;ov.classList.add('open');document.getElementById('lbClose').focus()}
+ function close(){ov.classList.remove('open');if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+ document.querySelectorAll('[data-leaderboard]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();open()}));
+ tabs.forEach(t=>t.addEventListener('click',()=>{cls=t.dataset.class;render();scroller.scrollTop=0}));
+ document.getElementById('lbX').addEventListener('click',close);document.getElementById('lbClose').addEventListener('click',close);
+ ov.addEventListener('click',e=>{if(e.target===ov)close()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.classList.contains('open'))close()});
+ /* try to pull the latest list straight from ranking.html */
+ try{fetch('ranking.html',{cache:'no-cache'}).then(r=>r.ok?r.text():Promise.reject()).then(t=>{
+  const m=t.match(/const\s+classRankings\s*=\s*(\{[\s\S]*?\n\})\s*;/);if(!m)return;
+  const d=new Function('return '+m[1])();if(d&&d["7"]&&d["8"]){data=d;if(ov.classList.contains('open'))render()}
+ }).catch(()=>{})}catch(e){}
+})();
 </script>
 </body></html>
